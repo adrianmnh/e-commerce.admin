@@ -7,11 +7,10 @@ const ListProduct = () => {
 	const [allProducts, setAllProducts] = useState([]);
 
 	const fetchInfo = async () => {
-		await fetch('http://localhost:4000/allproducts')
+		await fetch('http://localhost:4000/all_product')
 		.then( (res) => res.json() )
 		.then( (data) => {
-			setAllProducts(data)
-			// console.log(...data);
+			setAllProducts(data.all_product)
 		} );
 	}
 
@@ -19,11 +18,15 @@ const ListProduct = () => {
 		fetchInfo();
 	}, [])
 
+	useEffect( () => {
+		console.log(allProducts);
+	}, [allProducts])
+
 	const removeProduct = async (id) => {
 
 		if( !window.confirm('Are you sure?') ) return;
 
-		await fetch('http://localhost:4000/removeproduct', {
+		await fetch('http://localhost:4000/remove_product', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
@@ -47,8 +50,8 @@ const ListProduct = () => {
 			<div className="listproduct-format-main">
 				<p>Product</p>
 				<p>Title</p>
-				<p>Old Price</p>
-				<p>New Price</p>
+				<p>Retail Price</p>
+				<p>Offer Price</p>
 				<p>Category</p>
 				<p>Remove</p>
 			</div>
@@ -61,8 +64,8 @@ const ListProduct = () => {
 						<div className="listproduct-format-main listproduct-format">
 							<img className='listproduct-product-image' src={product.image} />
 							<p>{product.name}</p>
-							<p>${product.old_price}</p>
-							<p>${product.new_price}</p>
+							<p>{`${product.retail_price ? `\$ ${product.retail_price}` : `-`}`}</p>
+							<p>{`${product.offer_price ? `\$ ${product.offer_price}` : `-`}`}</p>
 							<p>{product.category}</p>
 							<img onClick={()=>{removeProduct(product.id)}} className="listproduct-remove-icon" src={cross_icon} />
 						</div>
