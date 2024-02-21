@@ -10,7 +10,7 @@ const AddProduct = () => {
 		image: '',
 		category: '',
 		retail_price: '',
-		offer_price: ''
+		sale_price: ''
 	})
 
 	const imageHandler = (e) => {
@@ -19,9 +19,10 @@ const AddProduct = () => {
 	}
 
 	const changeHandler = (e) => {
-		if(e.target.name === 'retail_price' || e.target.name === 'offer_price') {
+		if(e.target.name === 'retail_price' || e.target.name === 'sale_price') {
 			if( e.target.value > 10000000 ) return;
 		}
+
 		setProductDetails({ ...productDetails, [e.target.name]: e.target.value })
 		// console.log(productDetails);
 	}
@@ -36,13 +37,14 @@ const AddProduct = () => {
 		let formData = new FormData();
 		formData.append('product', image);
 
+		console.log(formData)
+
 		// console.log(...formData);
 		// new Response(formData).text().then(console.log) // To see the entire raw body
 
-		if (!product.name || !product.retail_price || !product.offer_price || !product.category) return alert('Please fill all the fields');
+		if (!product.name || !product.retail_price || !product.category) return alert('Please fill all the fields');
 
-		if (isNaN(product.retail_price) || isNaN(product.offer_price)) return alert('Please enter valid price');
-
+		if (isNaN(product.retail_price) || isNaN(product.sale_price)) return alert('Please enter valid price');
 
 		await fetch('http://localhost:4000/upload', {
 			method: 'POST',
@@ -55,6 +57,8 @@ const AddProduct = () => {
 		// for( let key in responseData ) {
 		// 	console.log(key, responseData[key]);
 		// }
+
+		console.log(product.sale_price)
 
 
 		// If True image has been saved in multer storage
@@ -74,7 +78,7 @@ const AddProduct = () => {
 				if (data.success) {
 					alert('Product added successfully')
 					// Clear the form data
-					setProductDetails({ name: '', image: '', category: '', retail_price: '', offer_price: '' });
+					setProductDetails({ name: '', image: '', category: '', retail_price: '', sale_price: '' });
 					setImage(false);
 				} else {
 					alert('Failed')
@@ -95,7 +99,7 @@ const AddProduct = () => {
 			</div>
 			<div className='addproduct-price'>
 				<div className='addproduct-itemfield'>
-					<p>Price</p>
+					<p>Retail Price</p>
 					<div className="price-input-wrapper">
 						<span>$</span>
 						<input className='price-input' value={productDetails.retail_price} onChange={changeHandler}
@@ -112,8 +116,8 @@ const AddProduct = () => {
 					<p>Offer price</p>
 					<div className="price-input-wrapper">
 						<span>$</span>
-						<input className='price-input' value={productDetails.offer_price} onChange={changeHandler}
-								type='text' inputMode='Numeric' name='offer_price' placeholder='0' pattern="[0-9]*"
+						<input className='price-input' value={productDetails.sale_price} onChange={changeHandler}
+								type='text' inputMode='Numeric' name='sale_price' placeholder='0' pattern="[0-9]*"
 								onInput={(event) => {
 									// Replace non-digit characters with nothing, except for a single decimal point
 									event.target.value = event.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
@@ -129,7 +133,7 @@ const AddProduct = () => {
 					<option value=''>------</option>
 					<option value='women'>Women</option>
 					<option value='men'>Men</option>
-					<option value='kid'>Kid</option>
+					<option value='kids'>Kids</option>
 				</select>
 			</div>
 			<div className='addproduct-itemfield'>

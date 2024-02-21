@@ -50,8 +50,8 @@ const ListProduct = () => {
 			<div className="listproduct-format-main">
 				<p>Product</p>
 				<p>Title</p>
-				<p>Retail Price</p>
-				<p>Offer Price</p>
+				<p>Retail</p>
+				<p>Sale</p>
 				<p>Category</p>
 				<p>Remove</p>
 			</div>
