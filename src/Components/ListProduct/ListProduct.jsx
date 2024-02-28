@@ -18,9 +18,9 @@ const ListProduct = () => {
 		fetchInfo();
 	}, [])
 
-	useEffect(() => {
-		console.log(allProducts);
-	}, [allProducts])
+	// useEffect(() => {
+		// console.log(allProducts);
+	// }, [allProducts])
 
 	const removeProduct = async (id) => {
 
@@ -58,28 +58,13 @@ const ListProduct = () => {
 			<div className="listproduct-allproducts">
 				<hr />
 				{/* // Produt data from API */}
-				{/* { allProducts.map((product, index) => {
-				return (
-					<React.Fragment key={index}>
-						<div className="listproduct-format-main listproduct-format">
-							<img className='listproduct-product-image' src={product.image} />
-							<p>{product.name}</p>
-							<p>{`${product.retail_price ? `\$ ${product.retail_price}` : `-`}`}</p>
-							<p>{`${product.sale_price ? `\$ ${product.sale_price}` : `-`}`}</p>
-							<p>{product.category}</p>
-							<img onClick={()=>{removeProduct(product.id)}} className="listproduct-remove-icon" src={cross_icon} />
-						</div>
-						<hr />
-					</React.Fragment>
-				)
-			})} */}
 				{
 					/*
 						allProduct is a MAP. They key is the id of the object, and the value is the object itself.
 						We can use the Object.entries() method to get an array of the key-value pairs of the map, and then use the map() method to map over the array.
 					*/
 					Array.from(allProducts.entries()).map(([key, product]) => {
-						console.log( product);
+						// console.log( product);
 						return (
 							<React.Fragment key={key}>
 								<div className="listproduct-format-main listproduct-format">
