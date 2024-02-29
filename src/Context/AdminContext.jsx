@@ -1,10 +1,13 @@
 import React, { createContext, useEffect, useState } from 'react'
 
-export const AdminContext = createContext();
+export const AdminContext = createContext(null);
 
 const AdminContextProvider = (props) => {
 
 	const apiUrl = import.meta.env.VITE_APP_API_URL;
+	// const apiUrl = "http://localhost:4000";
+
+	console.log(apiUrl);
 
 	// const [allProducts, setAllProducts] = useState(new Map());
 
@@ -53,3 +56,5 @@ const AdminContextProvider = (props) => {
 		</AdminContext.Provider>
 	)
 }
+
+export default AdminContextProvider

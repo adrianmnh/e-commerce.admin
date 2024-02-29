@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import './ListProduct.css'
 import cross_icon from '../../assets/cross_icon.png'
 import { AdminContext } from '../../Context/AdminContext'
 
 const ListProduct = () => {
 
-	const { apiUrl } = React.useContext(AdminContext);
+	const { apiUrl } = useContext(AdminContext);
+	console.log(apiUrl);
 
 	const [allProducts, setAllProducts] = useState(new Map());
 
@@ -15,6 +16,7 @@ const ListProduct = () => {
 		await fetch(`${apiUrl}/all_product`)
 			.then((res) => res.json())
 			.then((data) => {
+				console.log(data);
 				setAllProducts(new Map(data.all_product))
 			});
 	}

@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import './AddProduct.css'
 import upload_area from '../../assets/upload_area.svg'
 import { AdminContext } from '../../Context/AdminContext'
 
 const AddProduct = () => {
 
-	const { apiUrl } = React.useContext(AdminContext);
+	const { apiUrl } = useContext(AdminContext);
 	const [image, setImage] = useState(false);
 	const [productDetails, setProductDetails] = useState({
 		name: '',
