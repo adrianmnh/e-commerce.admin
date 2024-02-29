@@ -31,7 +31,9 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
       - name: Build Admin Panel
-        run: npm run build
+        run: npm run build -- --mode production
+        env:
+          VITE_APP_API_URL: https://backend.ecomm.adriannyc.dev
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v4
