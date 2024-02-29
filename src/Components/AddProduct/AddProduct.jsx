@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import './AddProduct.css'
 import upload_area from '../../assets/upload_area.svg'
+import { AdminContext } from '../../Context/AdminContext'
 
 const AddProduct = () => {
 
+	const { apiUrl } = React.useContext(AdminContext);
 	const [image, setImage] = useState(false);
 	const [productDetails, setProductDetails] = useState({
 		name: '',
@@ -46,7 +48,8 @@ const AddProduct = () => {
 
 		if (isNaN(product.retail_price) || isNaN(product.sale_price)) return alert('Please enter valid price');
 
-		await fetch('http://localhost:4000/upload', {
+		// await fetch('http://localhost:4000/upload', {
+		await fetch(`${apiUrl}/upload`, {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -66,7 +69,8 @@ const AddProduct = () => {
 			product.image = responseData.image_url;
 			console.log(product);
 
-			await fetch('http://localhost:4000/add_product', {
+			// await fetch('http://localhost:4000/add_product', {
+			await fetch(`${apiUrl}/add_product`, {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',

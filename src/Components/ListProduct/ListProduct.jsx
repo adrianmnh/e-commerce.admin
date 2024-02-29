@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import './ListProduct.css'
 import cross_icon from '../../assets/cross_icon.png'
+import { AdminContext } from '../../Context/AdminContext'
 
 const ListProduct = () => {
 
+	const { apiUrl } = React.useContext(AdminContext);
+
 	const [allProducts, setAllProducts] = useState(new Map());
 
+
 	const fetchInfo = async () => {
-		await fetch('http://localhost:4000/all_product')
+		// await fetch('http://localhost:4000/all_product')
+		await fetch(`${apiUrl}/all_product`)
 			.then((res) => res.json())
 			.then((data) => {
 				setAllProducts(new Map(data.all_product))
@@ -19,14 +24,15 @@ const ListProduct = () => {
 	}, [])
 
 	// useEffect(() => {
-		// console.log(allProducts);
+	// console.log(allProducts);
 	// }, [allProducts])
 
 	const removeProduct = async (id) => {
 
 		if (!window.confirm('Are you sure?')) return;
 
-		await fetch('http://localhost:4000/remove_product', {
+		// await fetch('http://localhost:4000/remove_product', {
+		await fetch(`${apiUrl}/remove_product`, {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
