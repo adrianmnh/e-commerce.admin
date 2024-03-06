@@ -3,32 +3,83 @@
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
-	height: 740px;
+	max-width: calc(1920px - 350px);
+	height: calc(100vh - 140px );
 	padding: 10px 50px;
-	margin: 30px;
+	margin: 15px;
 	border-radius: 6px;
 	background: #fff;
 }
 
 .listproduct-format-main {
 	display: grid;
-	grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
-	gap: 10px;
+	grid-template-columns: 1fr 3fr .8fr .8fr 1fr .8fr;
+	/* gap: 10px; */
 	width: 100%;
-	padding: 20px 0px;
+	padding: 15px 0px;
 	color: #454545;
 	font-size: 15px;
 	font-weight: 600;
+	margin-top: 10px;
+	margin-bottom: -15px;
+	/* justify-content: flex-end; */
+}
+
+.center {
+	text-align: center;
 }
 
 .listproduct-format {
-	align-items: center;
+	align-items: flex-start;
 	font-weight: 500;
 }
 
 .listproduct-product-image {
-	/* width: 120px; */
-	height: 100px;
+	width: 110px;
+	margin-top: -17px;
+	align-self: flex-start;
+	/* height: 100px; */
+}
+
+.product-name-sizes {
+	display: flex;
+	align-self: flex-start;
+	flex-direction: column;
+	align-content: space-between;
+	width: 90%;
+	/* height: 100px; */
+}
+
+.product-name-sizes p {
+	margin: 5px 0px;
+	/* margin: 5px; */
+}
+
+.product-sizes {
+	display: flex;
+	width: 85%;
+	justify-content: space-between;
+	/* background: gold; */
+	text-transform: uppercase;
+}
+
+.product-price {
+	/* background: gold; */
+	/* padding: 15px 0px; */
+}
+
+.product-category {
+	/* background: gold; */
+	/* padding: 15px 0px; */
+	/* align-self: center; */
+}
+
+.product-modify-options {
+	display: flex;
+	/* background: gold; */
+	padding: 15px 0px;
+	margin-top: 5px;
+	margin-left: 10px;
 }
 
 .listproduct-remove-icon {
@@ -41,21 +92,22 @@
 	overflow-y: auto;
 }
 
-@media(max-width: 800px) {
+@media(max-width: 1280px) {
 	.list-product {
 		box-sizing: border-box;
 		width: 95%;
 		height: 100%;
-		padding: 10px 30px;
+		padding: 5px 30px;
 		margin: 20px auto;
 	}
 
 	.listproduct-format-main {
-		padding: 15px 0px;
+		padding: 10px 0px;
 		font-size: 12px;
 	}
 
 	.listproduct-product-image {
-		height: 60px;
+		/* height: 60px; */
+		width: 80px;
 	}
 }
