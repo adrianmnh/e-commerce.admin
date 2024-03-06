@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import './AddProduct.css'
 import upload_area from '../../assets/upload_area.svg'
 import { AdminContext } from '../../Context/AdminContext'
@@ -7,12 +7,28 @@ const AddProduct = () => {
 
 	const { apiUrl } = useContext(AdminContext);
 	const [image, setImage] = useState(false);
+	const allowAdd = useRef(true);
 	const [productDetails, setProductDetails] = useState({
 		name: '',
 		image: '',
 		category: '',
+		// description: '',
 		retail_price: '',
-		sale_price: ''
+		sale_price: '',
+		// xs: 70,
+		// s: 0,
+		// m: 0,
+		// l: 0,
+		// xl: 0,
+		// xxl: 0
+		// inventory: {
+		// 	xs: 70,
+		// 	s: 0,
+		// 	m: 0,
+		// 	l: 0,
+		// 	xl: 0,
+		// 	xxl: 0
+		// }
 	})
 
 	const imageHandler = (e) => {
@@ -21,17 +37,46 @@ const AddProduct = () => {
 	}
 
 	const changeHandler = (e) => {
-		if(e.target.name === 'retail_price' || e.target.name === 'sale_price') {
-			if( e.target.value > 10000000 ) return;
+		console.log(e.target.name, e.target.value);
+		if (e.target.name === 'retail_price' || e.target.name === 'sale_price') {
+			if (e.target.value > 1000000) return;
 		}
+		if (e.target.name.startsWith('inventory-')) {
+			const size = e.target.name.split('-')[1]; // get the size from the name
+			if (e.target.value > 99999) return;
+			setProductDetails(prevDetails => ({
+				...prevDetails,
+				[size]: e.target.value
+			}))
+		} else {
+			setProductDetails({ ...productDetails, [e.target.name]: e.target.value })
+		}
+		// if (e.target.name.startsWith('inventory-')) {
+		// 	const size = e.target.name.split('-')[1]; // get the size from the name
+		// 	if (e.target.value > 99999) return;
+		// 	setProductDetails(prevDetails => ({
+		// 		...prevDetails,
+		// 		inventory: {
+		// 			...prevDetails.inventory,
+		// 			[size]: e.target.value
+		// 		}
+		// 	}));
+		// } else {
+		// 	setProductDetails({ ...productDetails, [e.target.name]: e.target.value })
+		// }
 
-		setProductDetails({ ...productDetails, [e.target.name]: e.target.value })
-		// console.log(productDetails);
 	}
 
 	// Link logic to backend
 	const addProduct = async () => {
+
+		if (!allowAdd.current) return;
+
 		console.log(productDetails);
+
+		if (!image) {
+			return alert('Please select an image');
+		}
 
 		let responseData;
 		let product = productDetails;
@@ -39,14 +84,23 @@ const AddProduct = () => {
 		let formData = new FormData();
 		formData.append('product', image);
 
-		console.log(formData)
+		// console.log(formData)
 
 		// console.log(...formData);
 		// new Response(formData).text().then(console.log) // To see the entire raw body
 
-		if (!product.name || !product.retail_price || !product.category) return alert('Please fill all the fields');
+		if (!product.name || !product.retail_price || !product.category) {
+			// return alert('Please fill all the fields');
+			return
+		}
 
-		if (isNaN(product.retail_price) || isNaN(product.sale_price)) return alert('Please enter valid price');
+		if (isNaN(product.retail_price) || isNaN(product.sale_price)) {
+			// return alert('Please enter valid price');
+			return
+		}
+
+		allowAdd.current = false;
+		console.log('adding product');
 
 		// await fetch('http://localhost:4000/upload', {
 		await fetch(`${apiUrl}/upload`, {
@@ -60,8 +114,6 @@ const AddProduct = () => {
 		// for( let key in responseData ) {
 		// 	console.log(key, responseData[key]);
 		// }
-
-		console.log(product.sale_price)
 
 
 		// If True image has been saved in multer storage
@@ -82,14 +134,20 @@ const AddProduct = () => {
 				if (data.success) {
 					alert('Product added successfully')
 					// Clear the form data
-					setProductDetails({ name: '', image: '', category: '', retail_price: '', sale_price: '' });
-					setImage(false);
+					// setProductDetails({ name: '', image: '', category: '', retail_price: '', sale_price: '' });
+					// setImage(false);
 				} else {
 					alert('Failed')
 
 				}
 			})
 		}
+
+
+		setTimeout(() => {
+			allowAdd.current = true;
+		}, 2000)
+
 
 		// console.log(product);
 	}
@@ -107,13 +165,13 @@ const AddProduct = () => {
 					<div className="price-input-wrapper">
 						<span>$</span>
 						<input className='price-input' value={productDetails.retail_price} onChange={changeHandler}
-								type='text' inputMode='numeric' name='retail_price' placeholder='0' pattern="[0-9]*"
-								onInput={(event) => {
-									// Replace non-digit characters with nothing, except for a single decimal point
-									event.target.value = event.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-									// If there are more than two digits after the decimal point, remove them
-									event.target.value = event.target.value.replace(/(\.\d{2})./g, '$1');
-								  }} />
+							type='text' inputMode='numeric' name='retail_price' placeholder='0' pattern="[0-9]*"
+							onInput={(event) => {
+								// Replace non-digit characters with nothing, except for a single decimal point
+								event.target.value = event.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+								// If there are more than two digits after the decimal point, remove them
+								event.target.value = event.target.value.replace(/(\.\d{2})./g, '$1');
+							}} />
 					</div>
 				</div>
 				<div className='addproduct-itemfield'>
@@ -121,13 +179,13 @@ const AddProduct = () => {
 					<div className="price-input-wrapper">
 						<span>$</span>
 						<input className='price-input' value={productDetails.sale_price} onChange={changeHandler}
-								type='text' inputMode='Numeric' name='sale_price' placeholder='0' pattern="[0-9]*"
-								onInput={(event) => {
-									// Replace non-digit characters with nothing, except for a single decimal point
-									event.target.value = event.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-									// If there are more than two digits after the decimal point, remove them
-									event.target.value = event.target.value.replace(/(\.\d{2})./g, '$1');
-								  }} />
+							type='text' inputMode='Numeric' name='sale_price' placeholder='0' pattern="[0-9]*"
+							onInput={(event) => {
+								// Replace non-digit characters with nothing, except for a single decimal point
+								event.target.value = event.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+								// If there are more than two digits after the decimal point, remove them
+								event.target.value = event.target.value.replace(/(\.\d{2})./g, '$1');
+							}} />
 					</div>
 				</div>
 			</div>
@@ -139,6 +197,52 @@ const AddProduct = () => {
 					<option value='men'>Men</option>
 					<option value='kids'>Kids</option>
 				</select>
+			</div>
+			<div className="addproduct-itemfield">
+				<p>Product Description</p>
+				<textarea className="addproduct-textarea" placeholder="Type description here"></textarea>
+				<button>fetch description</button>
+			</div>
+			<div className="addproduct-itemsizes">
+				<p>Product Sizes</p>
+				<div className="addproduct-sizes">
+					<div className="addproduct-size">
+						<p>XS</p>
+						<input value={productDetails.xs} onChange={changeHandler} type='text' inputMode='Numeric' name='inventory-xs'
+							placeholder='0' onInput={(event) => {
+								// Replace with digits only
+								event.target.value = event.target.value.replace(/[^0-9]/g, '');
+							}} />
+					</div>
+					<div className="addproduct-size">
+						<p>S</p>
+						<input value={productDetails.s} onChange={changeHandler} type='text' inputMode='Numeric' name='inventory-s'
+							placeholder='0' onInput={(event) => {
+								event.target.value = event.target.value.replace(/[^0-9]/g, '');
+							}} />
+					</div>
+					<div className="addproduct-size">
+						<p>M</p>
+						<input value={productDetails.m} onChange={changeHandler} type='text' inputMode='Numeric' name='inventory-m'
+							placeholder='0' onInput={(event) => {
+								event.target.value = event.target.value.replace(/[^0-9]/g, '');
+							}} />
+					</div>
+					<div className="addproduct-size">
+						<p>L</p>
+						<input value={productDetails.l} onChange={changeHandler} type='text' inputMode='Numeric' name='inventory-l'
+							placeholder='0' onInput={(event) => {
+								event.target.value = event.target.value.replace(/[^0-9]/g, '');
+							}} />
+					</div>
+					<div className="addproduct-size">
+						<p>XL</p>
+						<input value={productDetails.xl} onChange={changeHandler} type='text' inputMode='Numeric' name='inventory-xl'
+							placeholder='0' onInput={(event) => {
+								event.target.value = event.target.value.replace(/[^0-9]/g, '');
+							}} />
+					</div>
+				</div>
 			</div>
 			<div className='addproduct-itemfield'>
 				<label htmlFor='file-input'>
